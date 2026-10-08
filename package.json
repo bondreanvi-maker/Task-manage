@@ -1,0 +1,33 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "Modern Task Management Application powered by Supabase PostgreSQL and Express",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "seed": "node backend/utils/seed.js",
+    "test": "node backend/test_suite.js"
+  },
+  "keywords": [
+    "task-manager",
+    "supabase",
+    "postgresql",
+    "express",
+    "javascript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

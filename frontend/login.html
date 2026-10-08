@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — TaskFlow</title>
+  <meta name="description" content="Sign in to your TaskFlow account to manage tasks, focus priorities, and track your daily productivity.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+      <button class="theme-toggle-btn" type="button" aria-label="Toggle theme">
+        <span>🌙</span> <span>Dark Mode</span>
+      </button>
+    </div>
+
+    <div class="auth-header">
+      <div class="auth-logo">✓</div>
+      <h2>Welcome Back</h2>
+      <p>Enter your credentials to access your dashboard</p>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group" style="margin-bottom: 16px;">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          class="form-input" 
+          placeholder="name@example.com" 
+          required 
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          class="form-input" 
+          placeholder="••••••••" 
+          required 
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+        Sign In
+      </button>
+    </form>
+
+    <div class="auth-demo-hint">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong>🚀 Quick Demo Login</strong>
+        <button type="button" id="btn-fill-demo">1-Click Fill</button>
+      </div>
+      <div style="color: var(--text-muted); font-size: 0.78rem;">
+        Email: <code>demo@taskflow.dev</code> | Pass: <code>password123</code>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+      Don't have an account? <a href="register.html" style="font-weight: 600;">Sign up</a>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById('btn-fill-demo')?.addEventListener('click', () => {
+      document.getElementById('email').value = 'demo@taskflow.dev';
+      document.getElementById('password').value = 'password123';
+      showToast('Demo credentials filled! Submitting...', 'info');
+      setTimeout(() => {
+        document.getElementById('login-form').requestSubmit();
+      }, 300);
+    });
+  </script>
+</body>
+</html>

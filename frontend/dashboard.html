@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow — Productivity Dashboard</title>
+  <meta name="description" content="Manage your tasks, track focus scores, and streamline daily productivity with TaskFlow.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">✓</div>
+        <span class="brand-name">TaskFlow</span>
+      </div>
+
+      <div class="nav-section">Navigation</div>
+      <ul class="nav-links">
+        <li>
+          <a href="#" class="nav-item nav-link-tab active" data-filter="all">
+            <div class="nav-item-left">
+              <span>📊</span>
+              <span>Dashboard</span>
+            </div>
+            <span class="nav-counter" id="counter-all">0</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item nav-link-tab" data-filter="pending">
+            <div class="nav-item-left">
+              <span>📋</span>
+              <span>My Tasks</span>
+            </div>
+            <span class="nav-counter" id="counter-pending">0</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item nav-link-tab" data-filter="today">
+            <div class="nav-item-left">
+              <span>📅</span>
+              <span>Due Today</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item nav-link-tab" data-filter="upcoming">
+            <div class="nav-item-left">
+              <span>⏳</span>
+              <span>Upcoming</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item nav-link-tab" data-filter="completed">
+            <div class="nav-item-left">
+              <span>✅</span>
+              <span>Completed</span>
+            </div>
+            <span class="nav-counter" id="counter-completed">0</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-section" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Categories</span>
+        <button class="btn-icon-subtle" onclick="taskManager.promptAddCategory()" title="Add Custom Category">
+          ＋
+        </button>
+      </div>
+      <div class="categories-container" id="sidebar-categories-list">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar">U</div>
+          <div class="user-info">
+            <div class="user-name">Loading...</div>
+            <div class="user-email">...</div>
+          </div>
+        </div>
+        <button class="btn-icon-subtle btn-logout" title="Sign Out">
+          🚪
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="main-wrapper">
+      <!-- Top Navbar -->
+      <header class="top-nav">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="mobile-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation">
+            ☰
+          </button>
+          <div class="nav-title-group">
+            <h1>Workspace Overview</h1>
+            <p id="current-date-text">Productivity & Task Execution</p>
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <button class="theme-toggle-btn" aria-label="Toggle color theme">
+            <span>🌙</span> <span>Dark Mode</span>
+          </button>
+
+          <!-- Notification Bell -->
+          <button id="notification-bell-btn" class="notification-bell-btn" aria-label="Notifications">
+            <span>🔔</span>
+            <span id="notification-badge" class="notification-badge" style="display: none;">0</span>
+          </button>
+
+          <!-- Notification Dropdown Menu -->
+          <div id="notification-menu" class="notification-menu">
+            <div class="notif-header">
+              <span>Notifications & Reminders</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Urgent tasks</span>
+            </div>
+            <div class="notif-list" id="notif-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="taskManager.openTaskModal()">
+            <span>＋</span>
+            <span>New Task</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Body -->
+      <main class="dashboard-content">
+        <!-- Greeting Header -->
+        <div class="greeting-header">
+          <div class="greeting-text">
+            <h2 id="greeting-heading">Good morning! 👋</h2>
+            <p>Here is what needs your attention today to stay on top of your goals.</p>
+          </div>
+        </div>
+
+        <!-- 6 Metrics Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-label">Total Tasks</span>
+              <div class="stat-icon total">📁</div>
+            </div>
+            <div class="stat-value" id="stat-total">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-label">Pending</span>
+              <div class="stat-icon pending">⏳</div>
+            </div>
+            <div class="stat-value" id="stat-pending">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-label">In Progress</span>
+              <div class="stat-icon in-progress">⚡</div>
+            </div>
+            <div class="stat-value" id="stat-in-progress">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-label">Completed</span>
+              <div class="stat-icon completed">✅</div>
+            </div>
+            <div class="stat-value" id="stat-completed">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-label">Overdue</span>
+              <div class="stat-icon overdue">⚠️</div>
+            </div>
+            <div class="stat-value" id="stat-overdue">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-label">High Priority</span>
+              <div class="stat-icon high">🔥</div>
+            </div>
+            <div class="stat-value" id="stat-high">0</div>
+          </div>
+        </div>
+
+        <!-- Middle Productivity Row: Smart Focus & Analytics -->
+        <div class="dashboard-middle-grid">
+          <!-- ⭐ Feature: Smart Focus "Focus Today" -->
+          <div class="focus-card-wrapper">
+            <div class="section-header">
+              <div class="section-title">
+                <span>🎯</span>
+                <h3>Focus Today</h3>
+                <span class="focus-badge-tag">Smart Priority Algorithm</span>
+              </div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">
+                Ranked by calculated Focus Score
+              </span>
+            </div>
+
+            <div class="focus-tasks-list" id="focus-tasks-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Progress Chart & Distribution Card -->
+          <div class="analytics-card">
+            <div>
+              <div class="section-title" style="margin-bottom: 12px;">
+                <span>📈</span>
+                <h3>Completion Rate</h3>
+              </div>
+
+              <!-- Pure SVG Circular Chart -->
+              <div class="progress-circle-box">
+                <svg viewBox="0 0 36 36" class="circular-chart">
+                  <path class="circle-bg"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path id="chart-circle-progress" class="circle"
+                    stroke-dasharray="0, 100"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                </svg>
+                <div class="chart-percentage" id="chart-percentage-text">0%</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 8px;">
+                Category Breakdown
+              </div>
+              <div class="category-bars" id="category-distribution-bars">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks Management Section -->
+        <section class="tasks-container">
+          <!-- Search, Filter & Sort Toolbar -->
+          <div class="toolbar-section">
+            <div class="toolbar-left">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input 
+                  type="text" 
+                  id="search-input" 
+                  class="search-input" 
+                  placeholder="Search tasks by title or description..." 
+                >
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <select id="filter-status" class="select-filter" aria-label="Filter by Status">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+
+              <select id="filter-priority" class="select-filter" aria-label="Filter by Priority">
+                <option value="">All Priorities</option>
+                <option value="High">High Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+
+              <select id="filter-category" class="select-filter" aria-label="Filter by Category">
+                <option value="">All Categories</option>
+              </select>
+
+              <select id="filter-date" class="select-filter" aria-label="Filter by Due Date">
+                <option value="">All Due Dates</option>
+                <option value="today">Due Today</option>
+                <option value="tomorrow">Due Tomorrow</option>
+                <option value="this-week">Due This Week</option>
+                <option value="overdue">Overdue</option>
+                <option value="upcoming">Upcoming</option>
+              </select>
+
+              <select id="sort-select" class="select-filter" aria-label="Sort Tasks">
+                <option value="newest">Sort: Newest</option>
+                <option value="oldest">Sort: Oldest</option>
+                <option value="dueDate">Sort: Due Date</option>
+                <option value="focusScore">Sort: Focus Score</option>
+                <option value="priority">Sort: Priority</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tasks Grid -->
+          <div id="tasks-grid" class="tasks-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Create / Edit Task Modal -->
+  <div id="task-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="task-modal-title">Create New Task</h3>
+        <button class="btn-icon-subtle" onclick="taskManager.closeTaskModal()" title="Close">✕</button>
+      </div>
+
+      <form id="task-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="task-title-input">Task Title *</label>
+            <input 
+              type="text" 
+              id="task-title-input" 
+              class="form-input" 
+              placeholder="e.g. Prepare quarterly engineering review" 
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="task-desc-input">Description</label>
+            <textarea 
+              id="task-desc-input" 
+              class="form-textarea" 
+              rows="3" 
+              placeholder="Add detailed context, steps, or requirements..."
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="task-priority-input">Priority</label>
+              <select id="task-priority-input" class="form-select">
+                <option value="High">🔴 High</option>
+                <option value="Medium" selected>🟡 Medium</option>
+                <option value="Low">⚪ Low</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="task-status-input">Status</label>
+              <select id="task-status-input" class="form-select">
+                <option value="Pending" selected>Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="task-category-input">Category</label>
+              <select id="task-category-input" class="form-select">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="task-due-input">Due Date</label>
+              <input type="date" id="task-due-input" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="task-tags-input">Tags (separated by comma)</label>
+            <input 
+              type="text" 
+              id="task-tags-input" 
+              class="form-input" 
+              placeholder="Design, Sprint, Urgent"
+            >
+          </div>
+
+          <!-- ⭐ Recurring Task Settings -->
+          <div style="background: var(--bg-card-hover); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <input type="checkbox" id="task-recurring-check" style="cursor: pointer; width: 16px; height: 16px;">
+              <label for="task-recurring-check" style="font-size: 0.88rem; font-weight: 600; cursor: pointer;">
+                🔁 Recurring Task (Auto-generates next occurrence upon completion)
+              </label>
+            </div>
+            <div class="form-group" style="margin-top: 8px;">
+              <label for="task-recurring-freq" style="font-size: 0.8rem;">Recurrence Frequency</label>
+              <select id="task-recurring-freq" class="form-select">
+                <option value="daily">Daily (Every day)</option>
+                <option value="weekly">Weekly (Every 7 days)</option>
+                <option value="monthly">Monthly (Every month)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="taskManager.closeTaskModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Task Detail View Modal -->
+  <div id="detail-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="detail-title">Task Details</h3>
+        <button class="btn-icon-subtle" onclick="taskManager.closeDetailModal()" title="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <span id="detail-status-badge" class="badge">Pending</span>
+          <span id="detail-priority-badge" class="badge">Medium</span>
+          <span class="focus-score-badge" id="detail-focus-score">Focus: 0</span>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <h4 style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Description</h4>
+          <p id="detail-desc" style="font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap;"></p>
+        </div>
+
+        <div class="detail-meta-grid">
+          <div class="detail-meta-item">
+            <span class="detail-meta-label">Category</span>
+            <span class="detail-meta-val" id="detail-category">Work</span>
+          </div>
+
+          <div class="detail-meta-item">
+            <span class="detail-meta-label">Due Date</span>
+            <span class="detail-meta-val" id="detail-due">Oct 7, 2026</span>
+          </div>
+
+          <div class="detail-meta-item">
+            <span class="detail-meta-label">Recurrence</span>
+            <span class="detail-meta-val" id="detail-recurring">None</span>
+          </div>
+
+          <div class="detail-meta-item">
+            <span class="detail-meta-label">Created At</span>
+            <span class="detail-meta-val" id="detail-created">...</span>
+          </div>
+
+          <div class="detail-meta-item" style="grid-column: 1 / -1;">
+            <span class="detail-meta-label">Last Updated</span>
+            <span class="detail-meta-val" id="detail-updated">...</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">Tags</h4>
+          <div id="detail-tags" class="task-tags-row"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn btn-danger btn-sm" id="btn-detail-delete">
+          🗑️ Delete
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn btn-secondary" onclick="taskManager.closeDetailModal()">Close</button>
+          <button type="button" class="btn btn-primary" id="btn-detail-edit">✏️ Edit Task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/tasks.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set current date string
+      const dateEl = document.getElementById('current-date-text');
+      if (dateEl) {
+        const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
+        dateEl.textContent = new Date().toLocaleDateString(undefined, options);
+      }
+
+      dashboard.updateGreeting();
+      taskManager.init();
+    });
+  </script>
+</body>
+</html>

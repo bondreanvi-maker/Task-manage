@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow — Modern Full-Stack Task & Productivity Manager</title>
+  <meta name="description" content="Supercharge your productivity with TaskFlow. Intelligent priority focus scores, recurring task automation, and real-time task analytics.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      border: 1px solid var(--border-subtle);
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .feature-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 60px;
+      width: 100%;
+      max-width: 960px;
+      text-align: left;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .feature-card h4 {
+      font-size: 1.1rem;
+      margin: 12px 0 8px;
+      font-weight: 700;
+    }
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-section">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>✨</span> Smart Focus & Automated Task Engine
+      </div>
+      <h1 class="hero-title">
+        Accomplish more with <span class="brand-name">TaskFlow</span>
+      </h1>
+      <p class="hero-subtitle">
+        A full-stack task manager engineered with intelligent priority scoring, recurring task automation, visual dashboard analytics, and secure JWT authentication.
+      </p>
+
+      <div class="hero-cta">
+        <a href="dashboard.html" class="btn btn-primary" style="padding: 14px 32px; font-size: 1rem;">
+          Open Dashboard →
+        </a>
+        <a href="login.html" class="btn btn-secondary" style="padding: 14px 28px; font-size: 1rem;">
+          Sign In
+        </a>
+        <a href="register.html" class="btn btn-secondary" style="padding: 14px 28px; font-size: 1rem;">
+          Create Free Account
+        </a>
+      </div>
+
+      <div class="feature-cards-grid">
+        <div class="feature-card">
+          <div style="font-size: 1.8rem;">🎯</div>
+          <h4>Smart Focus Scoring</h4>
+          <p>Algorithmically computes focus scores based on priority, urgency, and due dates to keep high-impact items at the top of your list.</p>
+        </div>
+        <div class="feature-card">
+          <div style="font-size: 1.8rem;">🔁</div>
+          <h4>Recurring Automation</h4>
+          <p>Create daily, weekly, or monthly recurring workflows that auto-generate the next scheduled instance upon completion.</p>
+        </div>
+        <div class="feature-card">
+          <div style="font-size: 1.8rem;">📊</div>
+          <h4>Real-Time Analytics</h4>
+          <p>Monitor completion rates, overdue alerts, and category distributions through interactive CSS/SVG data charts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Quick redirect if already logged in
+    if (api.getToken()) {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>
